@@ -18,14 +18,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return this.engineData;
     }
 
-    async function getManufacturer(selectId) {
-        let select = document.getElementById(selectId);
+    const ManufacturerSelect = document.getElementById("car-brand-one");
+    const ModelSelect = document.getElementById("car-model-one");
+    const ManufacturerSecondSelect = document.getElementById("car-brand-second");
+    const ModelSecondSelect = document.getElementById("car-model-second");
 
+    async function getManufacturer(selectElement) {
+        
         fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json')
         .then(response => response.json())
         .then(data => {
+            selectElement.removeAttribute("disabled");
             data.Results.forEach(function (option, i) {
-                select.options[i] = new Option(option.MakeName, option.MakeId);
+                selectElement.options[i] = new Option(option.MakeName, option.MakeId);
             });
           })
         .catch((error) => {
@@ -33,8 +38,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    getManufacturer('car-brand-one');
-    getManufacturer('car-brand-second');
+    getManufacturer(ManufacturerSelect);
+    getManufacturer(ManufacturerSecondSelect);
+
+    function setSelectModelByManufacturerID(slecetElement, ManufacturerID) {
+        if(!isNaN(ManufacturerID)) {
+            fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeId/'+ManufacturerID+'?format=json')
+            .then(response => response.json())
+            .then(data => {
+                slecetElement.innerHTML = null;
+                slecetElement.removeAttribute("disabled");
+
+                data.Results.forEach(function (option, i) {
+                    slecetElement.options[i] = new Option(option.Model_Name, option.Model_ID);
+                });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    ManufacturerSelect.onchange = function(){
+        setSelectModelByManufacturerID(ModelSelect, this.selectedOptions[0].value);
+    };
+
+    ManufacturerSecondSelect.onchange = function(){
+        setSelectModelByManufacturerID(ModelSecondSelect, this.selectedOptions[0].value);
+    };
 
 
 
