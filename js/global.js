@@ -69,17 +69,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
     getManufacturer(ManufacturerSelect);
     getManufacturer(ManufacturerSecondSelect);
 
-    setAvailableYears(YearSelect);
-    setAvailableYears(YearSecondSelect);
 
+    
 
-    YearSelect.addEventListener("change", function() {
-        setSelectModelByManufacturerID(ModelSelect, this.selectedOptions[0].value);
+    ManufacturerSelect.addEventListener("change", function() {
+        setAvailableYears(YearSelect);
     });
 
-    YearSecondSelect.addEventListener("change", function() {
-        setSelectModelByManufacturerID(ModelSecondSelect, this.selectedOptions[0].value);
+    ManufacturerSecondSelect.addEventListener("change", function() {
+        setAvailableYears(YearSecondSelect);
     });
+
+
+    // ManufacturerSelect.addEventListener("change", function() {
+    //     setSelectModelByManufacturerID(ModelSelect, this.selectedOptions[0].value);
+    // });
+
+    // ManufacturerSecondSelect.addEventListener("change", function() {
+    //     setSelectModelByManufacturerID(ModelSecondSelect, this.selectedOptions[0].value);
+    // });
 
 
 
