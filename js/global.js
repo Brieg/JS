@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", function(event) {
 
     const ManufacturerSelect = document.getElementById("car-brand-one");
-    const ModelSelect = document.getElementById("car-model-one");
     const YearSelect = document.getElementById("car-year-one");
+    const ModelSelect = document.getElementById("car-model-one");
 
     const ManufacturerSecondSelect = document.getElementById("car-brand-second");
-    const ModelSecondSelect = document.getElementById("car-model-second");
     const YearSecondSelect = document.getElementById("car-year-second");
+    const ModelSecondSelect = document.getElementById("car-model-second");
+
 
     getManufacturer = (selectElement) => {
         
@@ -65,10 +66,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
         .catch((error) => {
             console.error('Error:', error);
         });
-        
     }
 
-    // https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&make=Opel&year=1941
+    getModelData = (ModelID) => {
+        console.log(ModelID)
+        fetch('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModel&model='+ModelID)
+        .then(response => response.text())
+        .then(text => {           
+            let data = carqueryapiToJson(text);
+            console.log(data);
+
+            // data.Trims.forEach(function (option, i) {
+            //     selectNodeElement.options[i] = new Option(option.model_name + ' ' + option.model_trim + ', (HP: '+option.model_engine_power_ps+')', option.model_id);
+            // });
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 
     getManufacturer(ManufacturerSelect);
     getManufacturer(ManufacturerSecondSelect);    
@@ -81,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         setAvailableYears(YearSecondSelect);
     });
 
-
     YearSelect.addEventListener("change", () => {
        setSelectModelByManufacturerID(ModelSelect, ManufacturerSelect.value, YearSelect.value);
     });
@@ -89,6 +103,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     YearSecondSelect.addEventListener("change", () => {
       setSelectModelByManufacturerID(ModelSecondSelect, YearSelect.value);
     });
+
+    ModelSelect.addEventListener("change", () => {
+        getModelData(ModelSelect.value);
+     });
+
+     ModelSecondSelect.addEventListener("change", () => {
+        getModelData(ModelSecondSelect.value);
+     });
+ 
 
 
 
