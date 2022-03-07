@@ -50,9 +50,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     setSelectModelByManufacturerID = (selectNodeElement, ManufacturerID, year) => {
-        console.log(ManufacturerID);
-        console.log(year);
-        console.log('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&make='+ManufacturerID+'&min_year='+year+'&max_year=2022')
         fetch('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&make='+ManufacturerID+'&min_year='+year+'&max_year=2022')
         .then(response => response.text())
         .then(text => {            
@@ -61,10 +58,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             selectNodeElement.innerHTML = null;
             selectNodeElement.removeAttribute("disabled");
 
-            console.log(data);
-
             data.Trims.forEach(function (option, i) {
-                //let modelName = 
                 selectNodeElement.options[i] = new Option(option.model_name + ' ' + option.model_trim + ', (HP: '+option.model_engine_power_ps+')', option.model_id);
             });
         })
@@ -74,27 +68,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
         
     }
 
-    https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&make=Opel&year=1941
-
+    // https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&make=Opel&year=1941
 
     getManufacturer(ManufacturerSelect);
     getManufacturer(ManufacturerSecondSelect);    
 
-    ManufacturerSelect.addEventListener("change", function() {
+    ManufacturerSelect.addEventListener("change", () => {
         setAvailableYears(YearSelect);
     });
 
-    ManufacturerSecondSelect.addEventListener("change", function() {
+    ManufacturerSecondSelect.addEventListener("change", () => {
         setAvailableYears(YearSecondSelect);
     });
 
 
-    YearSelect.addEventListener("change", function() {
-        setSelectModelByManufacturerID(ModelSelect, ManufacturerSelect.value, this.selectedOptions[0].value);
+    YearSelect.addEventListener("change", () => {
+       setSelectModelByManufacturerID(ModelSelect, ManufacturerSelect.value, YearSelect.value);
     });
 
-    YearSecondSelect.addEventListener("change", function() {
-        setSelectModelByManufacturerID(ModelSecondSelect, this.selectedOptions[0].value);
+    YearSecondSelect.addEventListener("change", () => {
+      setSelectModelByManufacturerID(ModelSecondSelect, YearSelect.value);
     });
 
 
