@@ -14,3 +14,5 @@ https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgc
 1. Press big icon ```C:``` on the plugin 
 2. Refresh CarVibes page
 3. Profit.
+
+See more about gather data: https://web.archive.org/web/20210514031602/http://www.carqueryapi.com/documentation/api-usage/

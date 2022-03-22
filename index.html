@@ -26,22 +26,22 @@
     <div class="container p-3">
       <div class="row gx-5">
         <div class="col">
+          <div class="p-3 bg-light">
+            <label>Select year:</label>
+            <select class="form-select" id="car-year-one" aria-label="Year" disabled>
+              <option selected="true" disabled="disabled">Gathering data...</option> 
+            </select>
+          </div>
          <div class="p-3 bg-light">
             <label>Select car manufacturer:</label>
-            <select class="form-select" id="car-brand-one" aria-label="Manufacturer" disabled> 
+            <select class="form-select" id="car-brand-one" aria-label="Manufacturer" data-label="Select year first.." disabled> 
               <option selected="true" disabled="disabled">Gathering data...</option> 
             </select>
           </div>
           <div class="p-3 bg-light">
-            <label>Select year:</label>
-            <select class="form-select" id="car-year-one" aria-label="Year" disabled>
-              <option selected="true" disabled="disabled">Select manufacturer first...</option> 
-            </select>
-          </div>
-          <div class="p-3 bg-light">
             <label>Select model:</label>
-            <select class="form-select" id="car-model-one" aria-label="Model" disabled>
-              <option selected="true" disabled="disabled">Select year first...</option> 
+            <select class="form-select" id="car-model-one" aria-label="Model" data-label="Select car manufacture first..." disabled>
+              <option selected="true" disabled="disabled">Gathering data...</option> 
             </select>
           </div>
           <div class="p-3 bg-light">
@@ -56,22 +56,22 @@
         </div>
         </div>
         <div class="col">
-          <div class="p-3 bg-light">
-            <label>Select car manufacturer:</label>
-            <select class="form-select" id="car-brand-second" aria-label="Manufacturer" disabled>
-              <option selected="true" disabled="disabled">Gathering data...</option>  
-            </select>
-          </div>
           <div class="p-3  bg-light">
             <label>Select year:</label>
             <select class="form-select" id="car-year-second" aria-label="Year" disabled>
-              <option selected="true" disabled="disabled">Select manufacturer first...</option> 
+              <option selected="true" disabled="disabled">Gathering data....</option> 
+            </select>
+          </div>
+          <div class="p-3 bg-light">
+            <label>Select car manufacturer:</label>
+            <select class="form-select" id="car-brand-second" aria-label="Manufacturer" data-label="Select year first..." disabled>
+              <option selected="true" disabled="disabled">Gathering data...</option>  
             </select>
           </div>
           <div class="p-3 bg-light">
             <label>Select model:</label>
-            <select class="form-select" id="car-model-second" aria-label="Model" disabled>
-              <option selected="true" disabled="disabled">Select year first...</option> 
+            <select class="form-select" id="car-model-second" aria-label="Model" data-label="Select car manufacture first..." disabled>
+              <option selected="true" disabled="disabled">Gathering data...</option> 
             </select>
           </div>
         </div>
