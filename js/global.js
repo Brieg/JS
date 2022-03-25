@@ -3,10 +3,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const ManufacturerSelect = document.getElementById("car-brand-one");
     const YearSelect = document.getElementById("car-year-one");
     const ModelSelect = document.getElementById("car-model-one");
+    const DataModelElement = document.getElementById("car-information-one");
 
     const ManufacturerSecondSelect = document.getElementById("car-brand-second");
     const YearSecondSelect = document.getElementById("car-year-second");
     const ModelSecondSelect = document.getElementById("car-model-second");
+    const DataModelSecondElement = document.getElementById("car-information-second");
 
     carqueryapiToJSON = (response) => JSON.parse(response.substring(2, response.length -2)); // remove first two leters "?(" character and last ");" from API reponse as text    
 
@@ -36,9 +38,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
                 let years = range(parseInt(data.Years.min_year), parseInt(data.Years.max_year));
 
-                for ( let i = 0; i < years.length; i++) {
-                    selectYear.options[i] = new Option( years[i],  years[i]);
-                }
+                years.forEach((years, index) => {
+                    selectYear.options[index] = new Option( years)
+                });
 
                 setStateElement(selectModel);
             }
@@ -88,37 +90,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    renderDataModel = (data) => Object.keys(data).forEach(e=>(data+': '+data[e]));
-
-    getModelData = (ModelID) => {
+    getModelData = (ModelID, dataElement) => {
         fetch('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModel&model='+ModelID)
         .then(response => response.text())
-        .then(text => {           
+        .then(text => {            
             let data = carqueryapiToJSON(text);
-            console.log(data)
-            data = JSON.parse(data);
-            console.log(data)
-            
-            data.forEach(function (option, i) {
-                console.log(renderDataModel(option))
-            });
+            let JSONData = data[0]; // for some reason API return it different that the rest of stuff
 
-            //console.log(renderDataModel(data))
+            let rows = '<ol class="list-group list-group">';
+            for (const key in JSONData) {
+                if(JSONData[key]) {
+                    rows += '<li class="list-group-item d-flex justify-content-between align-items-start">';
+                    let keyData = key.replace("model_", "").replaceAll("_"," ");
+                    keyData = keyData.charAt(0).toUpperCase() + keyData.slice(1);
+                    rows += '<div class="fw-bold">'+ keyData +'</div>';
+                    rows += JSONData[key];
+                    rows += '</li>';
+                }
+              }
+            rows += '</ol>';
 
-            // data.Trims.forEach(function (option, i) {
-            //     selectNodeElement.options[i] = new Option(option.model_name + ' ' + option.model_trim + ', (HP: '+option.model_engine_power_ps+')', option.model_id);
-            // });
+            dataElement.innerHTML = rows;
         })
         .catch((error) => {
             console.error('Error:', error);
         });
     }
 
-    setAvailableYears(YearSelect, ManufacturerSelect, ModelSelect);
-    setAvailableYears(YearSecondSelect, ManufacturerSecondSelect, ModelSecondSelect);
-
-
     // First group of selector
+    setAvailableYears(YearSelect, ManufacturerSelect, ModelSelect);
 
     YearSelect.addEventListener("change", () => {
         getManufacturer(ManufacturerSelect, ModelSelect, YearSelect.value);
@@ -129,21 +129,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
     ModelSelect.addEventListener("change", () => {
-        getModelData(ModelSelect.value);
+        getModelData(ModelSelect.value, DataModelElement);
     });
 
     // Second group of selector
+    setAvailableYears(YearSecondSelect, ManufacturerSecondSelect, ModelSecondSelect);
 
     YearSecondSelect.addEventListener("change", () => {
-        getManufacturer(ManufacturerSecondSelect, YearSecondSelect.value);
+        getManufacturer(ManufacturerSecondSelect, ModelSecondSelect, YearSecondSelect.value);
     });
 
     ManufacturerSecondSelect.addEventListener("change", () => {
-      setSelectModelByManufacturerID(ModelSecondSelect, ManufacturerSecondSelect, YearSecondSelect.value);
+      setSelectModelByManufacturerID(ModelSecondSelect, ManufacturerSecondSelect.value, YearSecondSelect.value);
     });
 
     ModelSecondSelect.addEventListener("change", () => {
-        getModelData(ModelSecondSelect.value);
+        getModelData(ModelSecondSelect.value, DataModelSecondElement);
     });
 
 });
