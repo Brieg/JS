@@ -1,5 +1,11 @@
 document.addEventListener("DOMContentLoaded", function(event) {
 
+    const car = {
+        year: '',
+        manufacturer: '',
+        modelID: ''
+    }
+
     const ManufacturerSelect = document.getElementById("car-brand-one");
     const YearSelect = document.getElementById("car-year-one");
     const ModelSelect = document.getElementById("car-model-one");
@@ -39,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 let years = range(parseInt(data.Years.min_year), parseInt(data.Years.max_year));
 
                 years.forEach((years, index) => {
-                    selectYear.options[index] = new Option( years)
+                    selectYear.options[index] = new Option(years)
                 });
 
                 setStateElement(selectModel);
@@ -130,6 +136,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     ModelSelect.addEventListener("change", () => {
         getModelData(ModelSelect.value, DataModelElement);
+        car.year = YearSelect.value;
+        car.manufacturer = ManufacturerSelect.value;
+        car.modelID = ModelSelect.value;
+        window.localStorage.setItem('ModelFirst', JSON.stringify(car));
     });
 
     // Second group of selector
@@ -145,6 +155,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     ModelSecondSelect.addEventListener("change", () => {
         getModelData(ModelSecondSelect.value, DataModelSecondElement);
+        car.year = YearSecondSelect.value;
+        car.manufacturer = ManufacturerSecondSelect.value;
+        car.modelID = ModelSecondSelect.value;
+        window.localStorage.setItem('ModelSecond', JSON.stringify(car));
     });
 
 });
