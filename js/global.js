@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         if (clearElement) {
             element.disabled = true;
-            element.innerText.null
+            element.innerText = null;
             element.options[0] = new Option(element.dataset.label);
             element.options[0].selected = true;
         } else {
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }); 
     }
 
-    getManufacturer = (selectManufacturer, selectModel, year) => {
+    getManufacturer = (selectManufacturer, selectModel, dataElement, year) => {
 
         setStateElement(selectManufacturer, false);
         
@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             });
 
             setStateElement(selectModel);
+            dataElement.innerText = null;
           })
         .catch((error) => {
             console.error('Error:', error);
@@ -127,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     setAvailableYears(YearSelect, ManufacturerSelect, ModelSelect);
 
     YearSelect.addEventListener("change", () => {
-        getManufacturer(ManufacturerSelect, ModelSelect, YearSelect.value);
+        getManufacturer(ManufacturerSelect, ModelSelect, DataModelElement, YearSelect.value);
     });
 
     ManufacturerSelect.addEventListener("change", () => {
@@ -146,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     setAvailableYears(YearSecondSelect, ManufacturerSecondSelect, ModelSecondSelect);
 
     YearSecondSelect.addEventListener("change", () => {
-        getManufacturer(ManufacturerSecondSelect, ModelSecondSelect, YearSecondSelect.value);
+        getManufacturer(ManufacturerSecondSelect, ModelSecondSelect, DataModelSecondElement, YearSecondSelect.value);
     });
 
     ManufacturerSecondSelect.addEventListener("change", () => {
