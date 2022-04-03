@@ -6,21 +6,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
         modelID: ''
     }
 
-    const ManufacturerSelect = document.getElementById("car-brand-one");
-    const YearSelect = document.getElementById("car-year-one");
-    const ModelSelect = document.getElementById("car-model-one");
-    const DataModelElement = document.getElementById("car-information-one");
+    const ModelFirstLocalStorageLabel = 'ModelFirst'
+    const ModelFirstInStorage =  JSON.parse(localStorage[ModelFirstLocalStorageLabel]);
 
-    const ManufacturerSecondSelect = document.getElementById("car-brand-second");
-    const YearSecondSelect = document.getElementById("car-year-second");
-    const ModelSecondSelect = document.getElementById("car-model-second");
-    const DataModelSecondElement = document.getElementById("car-information-second");
+    const YearSelect = document.querySelector("#car-year-one");
+    const ManufacturerSelect = document.querySelector("#car-brand-one");
+    const ModelSelect = document.querySelector("#car-model-one");
+    const DataModelElement = document.querySelector("#car-information-one");
+    const ClearButton = document.querySelector("#clear-one");
+
+    const YearSecondSelect = document.querySelector("#car-year-second");
+    const ManufacturerSecondSelect = document.querySelector("#car-brand-second");
+    const ModelSecondSelect = document.querySelector("#car-model-second");
+    const DataModelSecondElement = document.querySelector("#car-information-second");
+    const ClearButtonSecond = document.querySelector("#clear-second");
 
     carqueryapiToJSON = (response) => JSON.parse(response.substring(2, response.length -2)); // remove first two leters "?(" character and last ");" from API reponse as text    
 
     range = (start, end) => [...Array(end - start + 1)].map((_, i) => start + i);
 
     setStateElement = (element, clearElement = true) => { 
+        console.log(element)
 
         if (clearElement) {
             element.disabled = true;
@@ -45,12 +51,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 let years = range(parseInt(data.Years.min_year), parseInt(data.Years.max_year));
 
                 years.forEach((years, index) => {
-                    selectYear.options[index] = new Option(years)
+                    selectYear.options[index] = new Option(years, years)
                 });
 
                 setStateElement(selectModel);
+
+                if(ModelFirstInStorage && selectYear == YearSelect) {
+                    selectYear.value = ModelFirstInStorage.year;
+                    selectYear.dispatchEvent( new Event('change'));
+                    ClearButton.removeAttribute("hidden");
+                }
             }
-        )  
+        ) 
         .catch((error) => {
             console.error('Error:', error);
         }); 
@@ -59,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     getManufacturer = (selectManufacturer, selectModel, dataElement, year) => {
 
         setStateElement(selectManufacturer, false);
-        
         fetch('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&year='+year)
         .then(response => response.text())
         .then(text => {            
@@ -71,6 +82,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             setStateElement(selectModel);
             dataElement.innerText = null;
+
+            if(ModelFirstInStorage && selectManufacturer == ManufacturerSelect) {
+                selectManufacturer.value = ModelFirstInStorage.manufacturer;
+                selectManufacturer.dispatchEvent( new Event('change'));
+            }
           })
         .catch((error) => {
             console.error('Error:', error);
@@ -91,6 +107,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 label += option.model_engine_power_ps ? ', HP: '+ option.model_engine_power_ps : "";
                 selectElement.options[i] = new Option(label, option.model_id);
             });
+
+            if(ModelFirstInStorage && selectElement == ModelSelect) {
+                selectElement.value = ModelFirstInStorage.modelID;
+                selectElement.dispatchEvent( new Event('change'));
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -140,9 +161,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         car.year = YearSelect.value;
         car.manufacturer = ManufacturerSelect.value;
         car.modelID = ModelSelect.value;
-        window.localStorage.setItem('ModelFirst', JSON.stringify(car));
+        window.localStorage.setItem(ModelFirstLocalStorageLabel, JSON.stringify(car));
     });
-
+    
     // Second group of selector
     setAvailableYears(YearSecondSelect, ManufacturerSecondSelect, ModelSecondSelect);
 
@@ -160,6 +181,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
         car.manufacturer = ManufacturerSecondSelect.value;
         car.modelID = ModelSecondSelect.value;
         window.localStorage.setItem('ModelSecond', JSON.stringify(car));
+    });
+
+    ClearButton.addEventListener("click", () => {
+
+        setStateElement(ManufacturerSelect)
+        setStateElement(ModelSelect)
+        YearSelect.options[0].selected = "true";
+        localStorage.removeItem(ModelFirstLocalStorageLabel);
+
     });
 
 });
